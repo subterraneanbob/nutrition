@@ -1,6 +1,8 @@
+import os
 from urllib.parse import urlencode
 
 import requests
+from PIL import Image
 
 
 def get_dataset_url(public_url: str) -> str:
@@ -32,4 +34,20 @@ def parse_ingredients(ingredients_id: str, ingredients_map: dict[int, str]) -> s
     """
 
     ids = [int(id.strip().removeprefix("ingr_")) for id in ingredients_id.split(";")]
-    return ", ".join(ingredients_map[id] for id in ids)
+    return ", ".join(sorted(ingredients_map[id] for id in ids))
+
+
+def load_dish_image(dish_id: str) -> Image:
+    """Загружает фотографию блюда с диска по его идентификатору.
+
+    Args:
+        dish_id (str): Идентификатор блюда.
+
+    Returns:
+        Image: Данные изображения.
+    """
+
+    img_path = os.path.join("data", "images", str(dish_id), "rgb.png")
+    img = Image.open(img_path).convert("RGB")
+
+    return img
