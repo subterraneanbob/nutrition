@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from urllib.parse import urlencode
 
 import requests
@@ -37,17 +37,18 @@ def parse_ingredients(ingredients_id: str, ingredients_map: dict[int, str]) -> s
     return ", ".join(sorted(ingredients_map[id] for id in ids))
 
 
-def load_dish_image(dish_id: str) -> Image:
+def load_dish_image(dish_id: str, data_dir: str | Path = "data") -> Image:
     """Загружает фотографию блюда с диска по его идентификатору.
 
     Args:
         dish_id (str): Идентификатор блюда.
+        data_dir (str | Path): Корень каталога с данными.
 
     Returns:
         Image: Данные изображения.
     """
 
-    img_path = os.path.join("data", "images", str(dish_id), "rgb.png")
+    img_path = Path(data_dir) / "images" / str(dish_id) / "rgb.png"
     img = Image.open(img_path).convert("RGB")
 
     return img
