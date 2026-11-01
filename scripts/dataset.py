@@ -109,20 +109,12 @@ def build_image_transform(
 ) -> A.Compose:
     if is_train:
         return A.Compose([
-            A.RandomResizedCrop(size=(img_size, img_size), scale=(0.7, 1.0)),
+            A.Resize(img_size, img_size),
             A.HorizontalFlip(p=0.5),
             A.VerticalFlip(p=0.5),
             A.RandomRotate90(p=0.5),
-            A.ColorJitter(
-                brightness=0.2, contrast=0.2, saturation=0.1, hue=0.02, p=0.5
-            ),
-            A.CoarseDropout(
-                num_holes_range=(1, 2),
-                hole_height_range=(16, 32),
-                hole_width_range=(16, 32),
-                p=0.3,
-            ),
-            A.Normalize(img_mean, img_std),
+            A.RandomBrightnessContrast(p=0.2),
+            A.Normalize(mean=img_mean, std=img_std),
             A.ToTensorV2(),
         ])
     else:
